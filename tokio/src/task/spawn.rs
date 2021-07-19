@@ -131,6 +131,15 @@ cfg_rt! {
     }
 
     #[cfg_attr(tokio_track_caller, track_caller)]
+    pub fn spawn_with_name<T>(future: T, name : &str) -> JoinHandle<T::Output>
+    where
+        T: Future + Send + 'static,
+        T::Output: Send + 'static,
+    {
+        spawn_inner(future, Some(name))
+    }
+
+    #[cfg_attr(tokio_track_caller, track_caller)]
     pub(super) fn spawn_inner<T>(future: T, name: Option<&str>) -> JoinHandle<T::Output>
     where
         T: Future + Send + 'static,
